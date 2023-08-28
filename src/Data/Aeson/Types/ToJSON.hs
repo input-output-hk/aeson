@@ -364,7 +364,7 @@ instance (key ~ Key, value ~ Value) => KeyValue Value (key, value) where
 instance value ~ Value => KeyValue Value (KM.KeyMap value) where
     (.=) = explicitToField toJSON
     {-# INLINE (.=) #-}
-    
+
     explicitToField f name value = KM.singleton name (f value)
     {-# INLINE explicitToField #-}
 
@@ -1609,10 +1609,10 @@ instance (ToJSON a) => ToJSON (DNE.DNonEmpty a) where
 
 -- | @since 2.0.2.0
 instance ToJSON1 Solo where
-    liftToJSON _ t _ (Solo a) = t a
+    liftToJSON _ t _ (MkSolo a) = t a
     liftToJSONList _ _ tl xs = tl (map getSolo xs)
 
-    liftToEncoding _ t _ (Solo a) = t a
+    liftToEncoding _ t _ (MkSolo a) = t a
     liftToEncodingList _ _ tl xs = tl (map getSolo xs)
 
 -- | @since 2.0.2.0
@@ -2105,7 +2105,7 @@ instance ToJSON1 Monoid.First where
     liftToEncoding o t to' = liftToEncoding o t to' . Monoid.getFirst
     liftOmitField :: forall a. (a -> Bool) -> Monoid.First a -> Bool
     liftOmitField _ = coerce (isNothing @a)
-    
+
 instance ToJSON a => ToJSON (Monoid.First a) where
     toJSON = toJSON1
     toEncoding = toEncoding1
@@ -2168,7 +2168,7 @@ instance ToJSON1 Semigroup.WrappedMonoid where
     liftToJSON _ t _ (Semigroup.WrapMonoid x) = t x
     liftToEncoding _ t _ (Semigroup.WrapMonoid x) = t x
     liftOmitField = coerce
-    
+
 instance ToJSON a => ToJSON (Semigroup.WrappedMonoid a) where
     toJSON = toJSON1
     toEncoding = toEncoding1
